@@ -36,18 +36,84 @@ document.addEventListener('DOMContentLoaded', function () {
         if (res[STORAGE_KEY_FAL_API]) {
           resolve(res[STORAGE_KEY_FAL_API]);
         } else {
-          const key = prompt(
-            'Enter your Fal.ai API key. It will be stored only in this browser.',
-          );
-          if (key) {
-            chrome.storage.local.set({ [STORAGE_KEY_FAL_API]: key }, () =>
-              resolve(key),
-            );
-          } else {
-            resolve(null);
-          }
+          showApiKeyModal()
+            .then((key) => {
+              if (!key) return resolve(null);
+              chrome.storage.local.set({ [STORAGE_KEY_FAL_API]: key }, () => resolve(key));
+            })
+            .catch(() => resolve(null));
         }
       });
+    });
+  }
+
+  function showApiKeyModal() {
+    return new Promise((resolve) => {
+      const modal = document.getElementById('api-key-modal');
+      const input = document.getElementById('api-key-input');
+      const toggle = document.getElementById('api-key-toggle');
+      const confirmBtn = document.getElementById('api-key-confirm');
+      const cancelBtn = document.getElementById('api-key-cancel');
+      const errorEl = document.getElementById('api-key-error');
+
+      let prevActive = document.activeElement;
+
+      function open() {
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+        input.value = '';
+        errorEl.style.display = 'none';
+        setTimeout(() => input.focus(), 0);
+        document.addEventListener('keydown', onKeyDown);
+      }
+
+      function close() {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        document.removeEventListener('keydown', onKeyDown);
+        if (prevActive && prevActive.focus) prevActive.focus();
+      }
+
+      function onKeyDown(e) {
+        if (e.key === 'Escape') {
+          close();
+          resolve(null);
+        }
+        if ((e.key === 'Enter' || e.keyCode === 13) && document.activeElement === input) {
+          onConfirm();
+        }
+      }
+
+      function isValid(key) {
+        return typeof key === 'string' && key.trim().length > 0;
+      }
+
+      function onConfirm() {
+        const key = input.value.trim();
+        if (!isValid(key)) {
+          errorEl.style.display = 'block';
+          return;
+        }
+        close();
+        resolve(key);
+      }
+
+      toggle.onclick = function () {
+        input.type = input.type === 'password' ? 'text' : 'password';
+      };
+      confirmBtn.onclick = onConfirm;
+      cancelBtn.onclick = function () {
+        close();
+        resolve(null);
+      };
+
+      // Also close if backdrop clicked
+      modal.querySelector('.modal-backdrop').onclick = function () {
+        close();
+        resolve(null);
+      };
+
+      open();
     });
   }
 

@@ -149,6 +149,35 @@
     </div>
   </div>
 
+  <!-- API Key Modal -->
+  <div id="api-key-modal" class="modal" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Enter your Fal.ai API key</h2>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Your key is only stored locally in this browser.</p>
+        <label class="modal-label" for="api-key-input">API Key</label>
+        <div class="password-field">
+          <input id="api-key-input" type="password" autocomplete="off" placeholder="fal_xxx..." />
+          <button id="api-key-toggle" type="button" class="icon-button" aria-label="Show or hide key">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <p id="api-key-error" class="modal-error" style="display:none;">Please enter a valid key.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="api-key-cancel" class="btn btn-secondary" type="button">Cancel</button>
+        <button id="api-key-confirm" class="btn btn-primary" type="button">Save</button>
+      </div>
+    </div>
+  </div>
+
   <script src="sidepanel.js"></script>
 </body>
 
