@@ -3,6 +3,8 @@
 ## ✨ Overview
 The Virtual Try-On Chrome Extension empowers you to virtually try on clothing from any website with ease. Utilizing the power of Fal.ai's advanced AI models, this extension allows you to overlay garments onto a human model, providing a realistic preview directly in your browser.
 
+https://github.com/user-attachments/assets/89a856eb-cb3d-431d-a34e-6bbece83934e
+
 ## 🚀 Features
 - **Seamless Garment Selection:** Easily pick clothing items from any webpage.
 - **Human Model Integration:** Upload your own image or use a default model for trying on clothes.
