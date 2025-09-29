@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Try-On</title>
+  <!-- Add browser-image-compression library -->
+  <script src="lib/browser-image-compression.js"></script>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+
+<body>
+  <div class="card">
+    <div class="card-content">
+      <div class="header">
+        <h1 class="title">try the fit <span>✨</span></h1>
+      </div>
+
+      <div class="tabs">
+        <div class="tabs-list">
+          <button class="tab-trigger active" data-tab="try-on">Try On</button>
+          <button class="tab-trigger" data-tab="history">History</button>
+        </div>
+
+        <div class="tab-content active" id="try-on-content">
+          <!-- User Photo Upload -->
+          <div class="upload-section">
+            <div class="section-header">
+              <label class="section-label">Your Picture</label>
+              <p class="section-description">Upload a clear front-facing photo of yourself</p>
+            </div>
+
+            <div class="upload-area" id="user-upload-area">
+              <input type="file" id="user-photo-input" accept="image/*" style="display: none;">
+              <div id="user-upload-placeholder" class="upload-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <p>Click or drag &amp; drop to upload a picture of yourself</p>
+              </div>
+              <div id="user-image-container" class="image-container" style="display: none;">
+                <img id="user-image-preview" class="image-preview" src="" alt="User photo">
+                <button id="remove-user-image" class="remove-button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              <div id="user-loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing image...</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="previous-photos-container" class="previous-photos">
+            <!-- Previous photos will be dynamically added here -->
+          </div>
+
+          <!-- Clothing Image Upload -->
+          <div class="upload-section">
+            <div class="section-header">
+              <label class="section-label">Clothing Item</label>
+              <p class="section-description">Choose a clothing item to virtually try on</p>
+            </div>
+
+            <div class="upload-area" id="clothing-upload-area">
+              <input type="file" id="clothing-photo-input" accept="image/*" style="display: none;">
+              <div id="clothing-split-view" class="split-upload">
+                <button id="website-pick-button" class="upload-option website-pick">
+                  <svg id="website-pick-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z">
+                    </path>
+                  </svg>
+                  <p id="website-pick-text">Pick an image from the current website</p>
+                </button>
+
+                <div class="divider">
+                  <div class="divider-line"></div>
+                  <div class="divider-circle">
+                    <span>OR</span>
+                  </div>
+                </div>
+
+                <button id="file-upload-button" class="upload-option file-upload">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <p>Click or drag &amp; drop an image</p>
+                </button>
+              </div>
+              <div id="clothing-image-container" class="image-container" style="display: none;">
+                <img id="clothing-image-preview" class="image-preview" src="" alt="Clothing item">
+                <button id="remove-clothing-image" class="remove-button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              <div id="clothing-loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing image...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Generate Button -->
+          <button class="generate-button" id="generate-button" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z">
+              </path>
+              <path d="M5 3v4"></path>
+              <path d="M19 17v4"></path>
+              <path d="M3 5h4"></path>
+              <path d="M17 19h4"></path>
+            </svg>
+            Generate
+          </button>
+        </div>
+
+        <div class="tab-content" id="history-content">
+          <div class="history-empty">
+            <p>No generated images yet.</p>
+            <button class="history-action" id="try-generating">Try generating some!</button>
+          </div>
+
+          <!-- This would show when there are images in history -->
+          <div class="history-results" style="display: none;">
+            <!-- History items will be added here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+
+</html>
